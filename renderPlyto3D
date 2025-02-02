@@ -1,0 +1,73 @@
+import open3d as o3d
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+import argparse
+import os
+from dreamfusion import DreamFusion  # Integrating DreamFusion for detailed 3D reconstruction
+
+class PCN(nn.Module):
+    def __init__(self, num_coarse=1024, bottleneck_size=1024):
+        super(PCN, self).__init__()
+        self.num_coarse = num_coarse
+        self.bottleneck_size = bottleneck_size
+        self.encoder = nn.Sequential(
+            nn.Conv1d(3, 128, 1),
+            nn.ReLU(),
+            nn.Conv1d(128, 256, 1),
+            nn.ReLU(),
+            nn.Conv1d(256, bottleneck_size, 1),
+            nn.ReLU()
+        )
+        self.fc = nn.Sequential(
+            nn.Linear(bottleneck_size, bottleneck_size),
+            nn.ReLU(),
+            nn.Linear(bottleneck_size, num_coarse * 3)
+        )
+
+    def forward(self, x):
+        B, N, _ = x.shape
+        x = x.transpose(1, 2)
+        features = self.encoder(x)
+        global_feat, _ = torch.max(features, dim=2)
+        coarse = self.fc(global_feat)
+        coarse = coarse.view(B, self.num_coarse, 3)
+        return coarse
+
+def load_ply(ply_path):
+    pcd = o3d.io.read_point_cloud(ply_path)
+    return np.asarray(pcd.points, dtype=np.float32)
+
+def complete_point_cloud(pcn_model, partial_pc):
+    partial_pc_tensor = torch.tensor(partial_pc).unsqueeze(0)
+    with torch.no_grad():
+        completed_pc = pcn_model(partial_pc_tensor)
+    return completed_pc.squeeze(0).cpu().numpy()
+
+def enhance_with_dreamfusion(completed_pc, object_name):
+    dreamfusion_model = DreamFusion()
+    enhanced_pc = dreamfusion_model.generate_3d(completed_pc, object_name)
+    return enhanced_pc
+
+def save_ply(points, output_path):
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(points)
+    o3d.io.write_point_cloud(output_path, pcd)
+
+def main(ply_path, output_path, object_name):
+    partial_pc = load_ply(ply_path)
+    pcn_model = PCN()
+    pcn_model.eval()
+    completed_pc = complete_point_cloud(pcn_model, partial_pc)
+    enhanced_pc = enhance_with_dreamfusion(completed_pc, object_name)
+    save_ply(enhanced_pc, output_path)
+    print("3D object recreation complete!")
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("ply_path", type=str, help="Path to input PLY file")
+    parser.add_argument("output_path", type=str, help="Path to save completed PLY file")
+    parser.add_argument("object_name", type=str, help="Object description")
+    args = parser.parse_args()
+    main(args.ply_path, args.output_path, args.object_name)
