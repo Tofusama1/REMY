@@ -1,0 +1,12 @@
+matplotlib
+pillow
+torch
+transformers
+opencv-python
+numpy
+open3d
+timm
+flask
+ultralytics
+threading
+queue
