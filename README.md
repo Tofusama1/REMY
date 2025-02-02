@@ -1,6 +1,7 @@
 # REMY
 ***
 Repository for Rutgers HackRU 2025
+Warning: THIS MAY ONLY WORK FOR WINDOWS USER
 
 ## Overview
 ***
@@ -74,6 +75,9 @@ This project aims to revolutionize interior design planning by making it more ac
    ```bash
    python main.py
    ```
+5. Install Camo Studios on your Laptop and Camo Camera on your Iphone
+[Camo Studio Download](https://reincubate.com/camo/downloads/)
+[Camo Camera Install](https://play.google.com/store/apps/details?id=com.reincubate.camo&hl=en_US)
 
 ## GitHub Setup for New Users
 
