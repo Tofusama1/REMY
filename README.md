@@ -1,7 +1,7 @@
 # REMY
 ***
-Repository for Rutgers HackRU 2025
-Warning: THIS MAY ONLY WORK FOR WINDOWS USER
+- Repository for Rutgers HackRU 2025
+- Warning: THIS MAY ONLY WORK FOR WINDOWS USER
 
 ## Overview
 ***
