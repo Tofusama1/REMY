@@ -8,5 +8,3 @@ open3d
 timm
 flask
 ultralytics
-threading
-queue
