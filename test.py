@@ -3,6 +3,17 @@ import numpy as np
 import cv2
 import open3d as o3d
 from flask import Flask, request, jsonify
+import threading
+
+
+#What you need to install:
+# pip install opencv-python
+# sudo apt-get update
+# sudo apt-get install -y libgl1-mesa-glx
+# pip install open3d
+# sudo apt-get install libosmesa6-dev
+# sudo apt-get install -y libglew-dev libglfw3-dev
+# export XDG_RUNTIME_DIR=/tmp/runtime-yourusername
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = './uploads'
