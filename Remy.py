@@ -115,6 +115,9 @@ def create_and_display_3d(image, output):
     o3d.visualization.draw_geometries([pcd])
     o3d.visualization.draw_geometries([mesh], mesh_show_wireframe=True)
     o3d.visualization.draw_geometries([mesh_uniform], mesh_show_back_face=True)
+    o3d.io.write_triangle_mesh("output_mesh.ply", mesh_uniform)
+    print("Mesh saved as output_mesh.ply")
+
 
 def main():
     try:
@@ -126,7 +129,6 @@ def main():
         
         # Create and display 3D visualization
         create_and_display_3d(processed_image, depth_output)
-        
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
