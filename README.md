@@ -8,7 +8,7 @@ Our project transforms interior design planning by using AI and computer vision 
 
 ## Features
 ***
-** Image Capture **
+**Image Capture**
 - 5-second countdown timer for stable photo capture.
 - Works with iPhone camera via IP camera connection.
 - Real-time terminal feedback during the capture process.
